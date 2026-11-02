@@ -20,7 +20,24 @@ app.get('/', (req, res) => {
 });
 
 // WebSocket ve web sayfası aynı sunucuyu kullanacak.
-const wss = new WebSocket.Server({ server });
+const allowedOrigins = new Set([
+  'https://connecta-qxkx.onrender.com'
+]);
+
+const wss = new WebSocket.Server({
+  server,
+  maxPayload: 16 * 1024,
+  verifyClient: (info, done) => {
+    const origin = info.origin;
+
+    if (!origin || !allowedOrigins.has(origin)) {
+      console.warn('WebSocket bağlantısı reddedildi:', origin);
+      return done(false, 403, 'Forbidden');
+    }
+
+    done(true);
+  }
+});
 
 server.listen(PORT, () => {
   console.log(`Connecta http://localhost:${PORT} adresinde çalışıyor.`);
