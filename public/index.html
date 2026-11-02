@@ -680,6 +680,9 @@ let lastMessageSender = null;
 }
 case 'peer-ready':
             setRemoteParticipant(data.peerName);
+            if (!peerConnection || peerConnection.signalingState === 'closed') {
+              createPeerConnection();
+            }
             if (role === 'caller' && peerConnection && !isOfferSent) {
               addMessage('Sistem', `${data.peerName} katıldı. Bağlantı kuruluyor...`);
               console.log('Eş hazır, teklif oluşturuluyor ve gönderiliyor.');
@@ -748,9 +751,9 @@ case 'peer-ready':
             resetRemoteParticipant();
             addParticipantNotice(data.name, 'left');
             if (remoteVideo.srcObject) {
-                remoteVideo.srcObject.getTracks().forEach(track => track.stop());
-                remoteVideo.srcObject = null;
+            remoteVideo.srcObject = null;
             }
+            remoteVideo.classList.remove('has-video');
             if (peerConnection) {
                 peerConnection.close();
                 peerConnection = null; // PeerConnection nesnesini null yaparak yeniden oluşturulmasını sağla
@@ -825,6 +828,12 @@ case 'peer-ready':
         console.warn("PeerConnection oluşturulurken yerel akış (localStream) mevcut değil.");
         addMessage('Sistem', 'Kamera/Mikrofon akışı olmadan bağlantı kuruluyor.');
       }
+      if (!localStream?.getVideoTracks().length) {
+        peerConnection.addTransceiver('video', {
+          direction: 'recvonly'
+      });
+    }
+
       peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
           console.log('Yeni ICE adayı gönderiliyor:', event.candidate);
