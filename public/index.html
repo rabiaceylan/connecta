@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connecta | Toplantıya Katıl</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{font-family:'DM Sans',Arial,sans-serif;color:#1d3028;background:#faf9f5}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#faf9f5}
+button,input{font:inherit}button{cursor:pointer}
+#login,#main{display:none}#login.active{display:grid}#main.active{display:flex}
+#login{min-height:100vh;grid-template-columns:minmax(0,1.18fr) minmax(390px,.82fr);background:#fbfaf6}
+.login-left{position:relative;isolation:isolate;overflow:hidden;min-height:780px;padding:36px clamp(30px,4.8vw,90px) 32px;display:flex;flex-direction:column;background:#e6ede3}
+.login-left:before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(circle at 80% 20%,#f3eecb 0,transparent 42%),radial-gradient(circle at 7% 85%,#c5ddc7 0,transparent 46%)}
+.login-left:after{content:"";position:absolute;right:-135px;top:150px;width:420px;height:420px;border:1px solid #739c7c35;border-radius:50%;z-index:-1;box-shadow:0 0 0 90px #b3cbb51a,0 0 0 180px #b3cbb511}
+.brand{display:flex;align-items:center;gap:10px;font-family:Manrope,Arial,sans-serif;font-size:30px;font-weight:800;letter-spacing:-1.8px;color:#163e2e}
+.brand-period{color:#86b66f}
+.hero-copy{max-width:660px;margin:64px 0 30px}
+.eyebrow{font-family:Manrope,Arial,sans-serif;color:#3d7757;font-size:11px;font-weight:800;letter-spacing:2.2px;display:flex;align-items:center;gap:10px}
+.eyebrow:before{content:"";width:25px;height:1px;background:#3d7757}
+.hero-copy h1{font-family:Manrope,Arial,sans-serif;font-size:clamp(42px,4.15vw,76px);line-height:1.075;letter-spacing:-3.9px;color:#153c2d;margin:18px 0 21px;font-weight:800}
+.hero-copy h1 em{font-style:normal;color:#6b9d6d}
+.hero-copy p{font-size:16px;line-height:1.8;color:#62786b;max-width:470px;margin:0}
+.photo-stage{position:relative;max-width:660px;width:100%;height:325px;margin:auto 0 20px}
+.photo-main{position:absolute;inset:8px 80px 0 0;border-radius:25px;background:#668674 url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=85') center 44%/cover no-repeat;box-shadow:0 23px 45px #254a3233;overflow:hidden}
+.photo-main:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,#102d2385)}
+.photo-caption{position:absolute;left:22px;bottom:20px;z-index:1;color:#fff;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700}
+.live-dot{width:9px;height:9px;border-radius:50%;background:#a6eeab;box-shadow:0 0 0 5px #a6eeab3b}
+.float-card{position:absolute;right:0;top:40px;width:170px;padding:10px;background:#fff;border:1px solid #eef0e8;border-radius:19px;box-shadow:0 16px 45px #1a3b2930;transform:rotate(4deg)}
+.float-photo{height:127px;border-radius:12px;background:#b3c9b9 url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=85') center 38%/cover no-repeat}
+.float-label{display:flex;align-items:center;gap:7px;color:#3e5749;font-size:11px;font-weight:700;padding:11px 4px 2px}
+.float-label:before{content:"";width:7px;height:7px;border-radius:50%;background:#70c688}
+.mini-tag{position:absolute;left:18px;top:-17px;background:#fff;border:1px solid #e2eadd;border-radius:999px;padding:11px 16px;box-shadow:0 10px 25px #1d3e2720;font-size:11px;font-weight:800;color:#3e6950}
+.hero-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:11px;color:#769080;margin-top:15px}
+.hero-foot span:last-child{font-weight:700;letter-spacing:1.2px;color:#5a7c64}
+.login-right{display:flex;justify-content:center;align-items:center;padding:70px clamp(28px,5.5vw,105px);background:#fbfaf6}
+.join-card{width:100%;max-width:430px}
+.card-topline{display:flex;align-items:center;gap:8px;margin-bottom:32px;color:#65866d;font-size:12px;font-weight:700}
+.card-topline:before{content:"";width:8px;height:8px;border-radius:50%;background:#83b98c}
+.card-kicker{color:#4d8c67;font-weight:800;font-size:11px;letter-spacing:1.8px;margin-bottom:12px;font-family:Manrope,Arial,sans-serif}
+.join-card h2{font-family:Manrope,Arial,sans-serif;font-size:clamp(34px,3vw,46px);letter-spacing:-2px;line-height:1.16;margin:0 0 15px;color:#173d2e;font-weight:800}
+.card-description{color:#819087;font-size:15px;line-height:1.7;margin:0 0 37px}
+.field-label{display:block;font-size:13px;font-weight:700;color:#324c3b;margin:0 0 10px}
+#login input{width:100%;padding:17px 17px;border:1px solid #d9e2d9;border-radius:12px;background:white;color:#1e3a2b;outline:none;margin-bottom:23px;transition:border-color .2s,box-shadow .2s}
+#login input:focus{border-color:#3e8d65;box-shadow:0 0 0 4px #3e8d651b}
+#login input::placeholder{color:#a4b1a6}
+#joinBtn{width:100%;border:0;border-radius:12px;background:#215e43;color:#fff;font-weight:800;padding:18px;box-shadow:0 12px 24px #215e4325;transition:background .2s,transform .2s}
+#joinBtn:hover{background:#184b34;transform:translateY(-2px)}
+#joinBtn:disabled{opacity:.6;cursor:wait;transform:none}
+.join-hint{display:flex;align-items:center;justify-content:center;gap:8px;color:#8b9a8f;font-size:12px;margin-top:22px}
+.join-divider{height:1px;background:#e5e9e1;margin:35px 0 25px}
+.join-note{color:#87958b;font-size:13px;line-height:1.8;margin:0}
+.join-note strong{color:#315943}
+#main{width:min(1200px,95vw);min-height:650px;margin:28px auto;padding:28px;border-radius:22px;background:#fff;box-shadow:0 15px 60px #142d1b12;flex-direction:column;align-items:center}
+#main h2{font-family:Manrope,Arial,sans-serif;color:#173b30;margin:5px 0 24px}
+#videos{display:flex;width:100%;gap:16px;margin-bottom:20px}
+#videos video{width:50%;height:340px;background:#17221d;border-radius:15px;object-fit:cover}
+#controls{display:flex;gap:12px;justify-content:center;margin-bottom:22px}
+.control-btn,#chat-send{border:0;border-radius:10px;background:#226c52;color:white;padding:12px 20px}
+.control-btn:disabled{opacity:.45;cursor:not-allowed}
+#chat-container{width:100%;background:#f3f7f4;border:1px solid #e2eae4;border-radius:14px;padding:18px;display:flex;flex-direction:column;height:220px}
+#messages{flex:1;overflow:auto;margin-bottom:12px;font-size:14px}
+.msg{padding:8px 12px;border-radius:9px;background:#e4eee8;margin-bottom:7px;width:fit-content;max-width:80%;overflow-wrap:anywhere}
+.msg.self{margin-left:auto;background:#c8e8d6}
+.msg.system{margin:7px auto;background:transparent;color:#6e8778;font-size:13px;text-align:center}
+#chat-form{display:flex;gap:10px}#chat-input{flex:1;min-width:0;border:1px solid #d7e0da;border-radius:9px;padding:11px 14px;background:white}
+@media(max-width:960px){#login{grid-template-columns:1fr}.login-left{min-height:auto;padding:30px 32px}.hero-copy{margin:60px 0 30px}.photo-stage{height:290px;margin:0}.login-right{padding:60px 28px}.join-card{max-width:560px}}
+@media(max-width:560px){.login-left{padding:24px 22px}.hero-copy{margin:45px 0 25px}.hero-copy h1{font-size:41px;letter-spacing:-2.3px}.photo-stage{height:230px}.photo-main{right:48px}.float-card{width:115px;top:42px}.float-photo{height:90px}.mini-tag{font-size:9px}.hero-foot span:last-child{display:none}#main{width:100%;margin:0;border-radius:0;padding:16px}#videos{flex-direction:column}#videos video{width:100%;height:210px}#controls{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* Connecta editorial polish */
+.login-left:before{background:radial-gradient(circle at 85% 15%,#f8f1d4 0,transparent 42%),radial-gradient(circle at 8% 86%,#b9d8bf 0,transparent 49%)}
+.hero-copy h1{font-family:Manrope,'Segoe UI',sans-serif;letter-spacing:-3.8px}
+.hero-copy h1 em{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:500;letter-spacing:-2.9px;color:#4b855e}
+.layered-stage{height:355px;max-width:690px}
+.layered-stage .photo-main{inset:18px 82px 10px 5px;border-radius:27px;transform:rotate(-1.4deg);background-image:url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85')}
+.layered-stage .float-card{width:185px;right:2px;top:45px;transform:rotate(6deg);border:5px solid #fff;border-radius:22px}
+.layered-stage .float-photo{height:150px;background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=500&q=85')}
+.photo-chip{position:absolute;bottom:5px;right:10px;background:#fff;border:1px solid #e6eee5;box-shadow:0 14px 35px #1d3e272a;border-radius:16px;padding:12px 15px;display:flex;align-items:center;gap:10px;color:#42634d;font-size:12px;font-weight:700;transform:rotate(-4deg)}
+.chip-avatars{display:flex;padding-left:5px}
+.chip-avatars i{font-style:normal;width:27px;height:27px;margin-left:-6px;border:2px solid white;border-radius:50%;background:#b9d5c1;display:grid;place-items:center;color:#28543c;font-size:10px}
+.chip-avatars i:nth-child(2){background:#d9e3b6}.chip-avatars i:nth-child(3){background:#edcdbb}
+.photo-sparkle{position:absolute;right:4px;top:0;color:#5b9c72;font-size:38px}
+.or-divider{display:flex;align-items:center;gap:13px;color:#9ca99f;font-size:12px;margin:20px 0}
+.or-divider:before,.or-divider:after{content:"";height:1px;background:#e3e9e1;flex:1}
+#createMeetingBtn{width:100%;background:#fff;color:#245c43;border:1px solid #b9d0bf;border-radius:12px;font-weight:800;padding:16px;transition:background .2s,transform .2s}
+#createMeetingBtn:hover{background:#edf6ee;transform:translateY(-1px)}
+#createMeetingBtn:disabled{opacity:.6;cursor:wait}
+@media(max-width:560px){.layered-stage{height:260px}.layered-stage .photo-main{right:60px}.layered-stage .float-card{width:120px;top:50px}.layered-stage .float-photo{height:95px}.photo-chip{font-size:10px;padding:8px;right:0}.photo-sparkle{display:none}}
+/* Meeting room: reference-inspired two-column layout */
+#main.active{display:flex}
+#main{width:min(1500px,calc(100% - 52px));min-height:calc(100vh - 52px);margin:26px auto;padding:0;overflow:hidden;align-items:stretch;background:#f7faf7;border:1px solid #e5ece5;box-shadow:0 20px 70px #15392712;border-radius:24px}
+.meeting-header{display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;padding:23px 31px;background:#fff;border-bottom:1px solid #e9eee9}
+.meeting-brand{font:800 25px/1 Manrope,sans-serif;color:#194d38;letter-spacing:-1.5px}.meeting-brand span{color:#91b68b}
+.meeting-heading{font:800 14px Manrope,sans-serif;color:#355c48;display:flex;align-items:center;gap:9px}
+.meeting-live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#68c98a;box-shadow:0 0 0 4px #68c98a25}
+.meeting-header-note{font-size:12px;color:#879b8c}
+.meeting-layout{display:grid;grid-template-columns:minmax(285px,340px) minmax(0,1fr);gap:16px;padding:18px;width:100%;flex:1;min-height:630px}
+#chat-container{height:auto;min-height:600px;width:100%;padding:0;background:#202b26;border:1px solid #36453c;border-radius:19px;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.chat-panel-header{padding:25px 22px 17px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff12}
+.chat-overline{font-size:10px;font-weight:800;letter-spacing:1.7px;color:#9bc8a7}.chat-panel-header h3{font:800 24px Manrope,sans-serif;letter-spacing:-.7px;color:#f3f8f2;margin:7px 0 0}.chat-header-dot{font-size:11px;color:#76d79c}
+.chat-bubble-icon{color:#d9e7d8;background:#34453b;border-radius:11px;padding:9px 12px;font-size:17px}
+.chat-tab{margin:18px 18px 0;padding:12px 15px;border-radius:10px;background:#e4efe4;color:#224a34;font-size:13px;font-weight:800;text-align:center}
+#messages{flex:1;min-height:180px;overflow-y:auto;padding:20px 16px 14px;margin:0;display:flex;flex-direction:column;gap:0;scrollbar-color:#56685a transparent;scrollbar-width:thin}
+#messages .msg{display:block;max-width:88%;width:fit-content;margin:0;padding:11px 13px;border-radius:13px 13px 13px 4px;background:#35443b;color:#f0f7ef;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+#messages .msg.self{align-self:flex-end;margin:0;border-radius:13px 13px 4px 13px;background:#a9e6b3;color:#163d2c}
+#messages .msg.system{align-self:center;max-width:100%;background:transparent;color:#a4b6a8;font-size:11px;text-align:center;padding:5px 8px}
+#chat-form{margin:0 15px 16px;display:flex;gap:8px;align-items:center;padding:6px;background:#f7faf6;border-radius:13px}
+#chat-input{background:transparent;border:0;box-shadow:none;outline:none;min-width:0;flex:1;padding:12px 10px;font-size:13px;color:#203f2e}
+#chat-send{display:grid;place-items:center;flex:none;width:39px;height:39px;padding:0;border-radius:10px;background:#246c4c;color:#fff;font-size:18px}
+.meeting-stage{min-width:0;border-radius:19px;background:#1c2520;padding:20px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.stage-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#b8c9be}.stage-tag{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:1.2px;font-weight:800}.stage-description{font-size:12px;color:#8ea597}
+#videos{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0;flex:1;min-height:370px}
+.video-tile{position:relative;min-width:0;min-height:370px;border-radius:16px;background:radial-gradient(circle at 30% 15%,#466556,#26382f 65%);overflow:hidden;display:grid;place-items:center}
+.video-tile:nth-child(2){background:radial-gradient(circle at 80% 15%,#3c5145,#26362d 70%)}
+.video-placeholder{display:grid;place-items:center;width:110px;height:110px;border-radius:50%;background:#b9d8c2;color:#24563e;font:800 56px Manrope,sans-serif}
+.remote-placeholder{background:#435d4e;color:#b7d9c3}
+#videos video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:transparent;border-radius:0}
+.video-name{position:absolute;left:14px;bottom:14px;background:#14221bc9;color:white;padding:8px 12px;border-radius:9px;font-size:12px;font-weight:700;z-index:1}
+#controls{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:0}
+#controls .control-btn{background:#394b40;border:1px solid #607166;color:#f3f8f3;border-radius:12px;padding:13px 18px;font-weight:700;font-size:13px}
+#controls .control-btn:not(:disabled):hover{background:#4b6653}
+#controls .control-btn:disabled{opacity:.48}
+.stage-footnote{text-align:center;margin:0;color:#7c9585;font-size:11px;letter-spacing:.5px}
+@media(max-width:850px){#main{width:100%;margin:0;min-height:100vh;border-radius:0}.meeting-layout{grid-template-columns:1fr}.meeting-stage{order:0}.meeting-layout #chat-container{order:1;min-height:400px;height:450px}.video-tile{min-height:240px}#videos{min-height:240px}.meeting-header{padding:18px}.meeting-header-note{display:none}}
+@media(max-width:560px){.meeting-layout{padding:10px;gap:10px}.meeting-stage{padding:13px}#videos{grid-template-columns:1fr;min-height:400px}.video-tile{min-height:190px}.stage-description{display:none}}
+/* Sesli görüşmelerde video etiketi avatarı kapatmasın. */
+#videos video{display:none}
+#videos video.has-video{display:block}
+.video-placeholder{user-select:none}
+.participant-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 90%;
+  margin: 14px auto;
+  padding: 10px 18px;
+  border-radius: 16px;
+  background: #34483d;
+  color: #d8e8de;
+  font-size: 12px;
+  text-align: center;
+}
+
+.participant-notice small {
+  color: #9bb5a5;
+  font-size: 10px;
+}
+
+/* CONNECTA - SOHBET MESAJLARI */
+#messages .msg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  max-width: 82%;
+  margin: 0 0 18px 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Kendi mesajlarımız sağda */
+#messages .msg.self {
+  align-items: flex-end;
+  margin-left: auto;
+  margin-right: 0;
+  background: transparent;
+}
+
+/* İsim ve saat */
+.msg-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 7px;
+  padding: 0 4px;
+}
+
+.msg-sender {
+  color: #e5f1e9;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.msg-time {
+  color: #9ab5a5;
+  font-size: 10px;
+}
+
+/* Karşı tarafın mesaj balonu */
+.msg-bubble {
+  background: #34483d;
+  color: #f3f8f4;
+  padding: 12px 15px;
+  border-radius: 5px 15px 15px 15px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* Kendi mesaj balonumuz */
+.msg.self .msg-bubble {
+  background: #287453;
+  color: #ffffff;
+  border-radius: 15px 5px 15px 15px;
+}
+
+/* Sohbet ve video alanlarının yüksekliği */
+.meeting-layout,
+.meeting-chat,
+.meeting-video-area {
+  min-height: 0;
+}
+
+/* Mesaj alanı kendi içinde kaydırılsın */
+#messages {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+}
+
+/* Video kutularının uzamasını önle */
+#videos {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#videos video {
+  height: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+#main.active {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+/* CONNECTA - DÜZENLİ MESAJ ARALIKLARI */
+#messages {
+  gap: 0;
+}
+
+/* Her mesajın temel boşluğu */
+#messages .msg {
+  margin: 0 0 14px 0;
+  padding: 0;
+  gap: 0;
+}
+
+/* Aynı kişinin peş peşe gönderdiği mesajlar */
+#messages .msg.msg-consecutive {
+  margin: 0 0 5px 0;
+}
+
+/* İlk mesaj da devamındaki mesajlara yakın olsun */
+#messages .msg:has(+ .msg-consecutive) {
+  margin-bottom: 5px;
+}
+
+/* Gönderen ismi */
+#messages .msg-header {
+  margin-bottom: 6px;
+}
+
+/* Mesaj balonları */
+#messages .msg-bubble {
+  padding: 9px 13px;
+  line-height: 1.4;
+}
+
+/* Katılma ve ayrılma bildirimleri */
+#messages .participant-notice {
+  margin: 14px auto;
+  flex-shrink: 0;
+}
+
+/* Connecta - Toplantıdan ayrıl butonu */
+#leaveMeetingBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 20px;
+  background: #c84949;
+  color: #ffffff;
+  border: 1px solid #c84949;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease,
+              transform 0.2s ease;
+}
+
+#leaveMeetingBtn:hover {
+  background: #ac3535;
+  transform: translateY(-2px);
+}
+
+#leaveMeetingBtn:active {
+  transform: translateY(0);
+}
+
+#leaveMeetingBtn:focus-visible {
+  outline: 3px solid #f3a6a6;
+  outline-offset: 3px;
+}
+
+/* CONNECTA - MINIMAL TOPLANTI KONTROLLERI */
+#controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Kamera, mikrofon ve ayrıl butonları */
+#controls button {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  padding: 0;
+  border-radius: 15px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  line-height: 1;
+  transition: background 0.2s, transform 0.2s;
+}
+
+#controls button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* Ayrıl butonu */
+#leaveMeetingBtn {
+  background: #cb4949;
+  color: white;
+  border: none;
+}
+
+#leaveMeetingBtn:hover {
+  background: #b83c3c;
+}
+
+/* İkonlu toplantı kontrol butonları */
+#controls button,
+#controls .control-btn {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  padding: 0;
+  border-radius: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #394b40;
+  color: #f3f8f3;
+  border: 1px solid #607166;
+  transition: background .2s, transform .2s;
+}
+
+#controls button svg { display:block; flex-shrink:0; }
+#controls button:disabled { opacity:.45; cursor:not-allowed; }
+#controls #leaveMeetingBtn { background:#cb4949; color:#fff; border-color:#cb4949; }
+#controls #leaveMeetingBtn:hover { background:#b83c3c; }
+#controls #copyInviteBtn {
+  background: #394b40;
+  color: #f3f8f3;
+  border: 1px solid #607166;
+}
+
+#controls #copyInviteBtn:hover {
+  background: #4a6555;
+}
+
+</style>
+
+</head>
+<body>
+<div id="login" class="active">
+  <section class="login-left">
+    <div class="brand">connecta<span class="brand-period">.</span></div>
+    <div class="hero-copy">
+      <div class="eyebrow">BİRLİKTE OLMAK İÇİN</div>
+      <h1>Mesafeler uzak,<br><em>bağlantılar yakın.</em></h1>
+      <p>Bir fikir, bir sohbet, bir buluşma. Connecta ile aynı odadaymış gibi kolayca bir araya gel.</p>
+    </div>
+
+    <div class="photo-stage layered-stage" aria-label="Connecta toplantı deneyimini temsil eden fotoğraflı tanıtım alanı">
+      <div class="photo-main"><div class="photo-caption"><span class="live-dot"></span> Bağlantıda kal, birlikte üret.</div></div>
+      <div class="mini-tag">✦ Daha yakın hisset</div>
+      <div class="float-card"><div class="float-photo"></div><div class="float-label">● Görüşmeye hazır</div></div>
+      <div class="photo-chip" aria-hidden="true"><span class="chip-avatars"><i>R</i><i>E</i><i>S</i></span><span>Birlikte daha yakın</span></div>
+      <div class="photo-sparkle" aria-hidden="true">✳</div>
+    </div>
+
+    <div class="hero-foot"><span>© 2026 Connecta</span><span>CONNECT · COLLABORATE · CREATE</span></div>
+  </section>
+
+  <section class="login-right">
+    <div class="join-card">
+      <div class="card-topline">Tarayıcından kolayca görüş</div>
+      <div class="card-kicker">CONNECTA'YA HOŞ GELDİN</div>
+      <h2>Güzel bir sohbet<br>burada başlar.</h2>
+      <p class="card-description">Toplantıya katılmak için bilgilerini gir. Birkaç saniye içinde bağlantıda olacaksın.</p>
+      <label class="field-label" for="nameInput">Adın</label>
+      <input type="text" id="nameInput" placeholder="Adını yaz" autocomplete="name" maxlength="50" />
+      <label class="field-label" for="roomInput">Toplantı kodu</label>
+      <input type="text" id="roomInput" placeholder="Örn. 1111" autocomplete="off" maxlength="50" />
+      <button id="joinBtn" type="button">Toplantıya katıl →</button>
+      <div class="or-divider"><span>veya</span></div>
+      <button id="createMeetingBtn" type="button">＋ Yeni toplantı oluştur</button>
+      <div class="join-hint">◌   Ek uygulama indirmeden görüşmeye katıl</div>
+      <div class="join-divider"></div>
+      <p class="join-note"><strong>Yeni toplantı oluştur</strong> seçeneği otomatik bir kod üretir. Kodu arkadaşınla paylaşarak aynı odada buluşabilirsiniz.</p>
+    </div>
+
+  </section>
+
+</div>
+
+<div id="main">
+    <header class="meeting-header">
+      <div class="meeting-brand">connecta<span>.</span></div>
+      <div class="meeting-heading"><span class="meeting-live"></span> Toplantı Odası</div>
+      <div class="meeting-header-note">Güvenli görüşme alanı</div>
+    </header>
+
+    <div class="meeting-layout">
+      <aside id="chat-container" aria-label="Toplantı sohbeti">
+        <div class="chat-panel-header">
+          <div><span class="chat-overline">BAĞLANTIDA KAL</span><h3>Sohbet <span class="chat-header-dot">●</span></h3></div>
+          <span class="chat-bubble-icon" aria-hidden="true">✉</span>
+        </div>
+
+        <div class="chat-tab">Mesajlar</div>
+        <div id="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+        <form id="chat-form">
+          <input type="text" id="chat-input" placeholder="Bir mesaj yaz..." autocomplete="off" aria-label="Mesajınız" required />
+          <button type="submit" id="chat-send" aria-label="Mesaj gönder">➤</button>
+        </form>
+      </aside>
+
+      <section class="meeting-stage" aria-label="Video görüşmesi">
+        <div class="stage-top"><span class="stage-tag"><span class="meeting-live"></span> CANLI GÖRÜŞME</span><span class="stage-description">Birlikte, nerede olursanız olun.</span></div>
+        <div id="videos">
+          <div class="video-tile"><div class="video-placeholder" id="localAvatar" aria-hidden="true">?</div><video id="localVideo" autoplay muted playsinline></video><span class="video-name">Sen</span></div>
+          <div class="video-tile"><div class="video-placeholder remote-placeholder" id="remoteAvatar" aria-hidden="true">◌</div><video id="remoteVideo" autoplay playsinline></video><span class="video-name" id="remoteParticipantName">Katılımcı bekleniyor</span></div>
+        </div>
+
+<div id="controls">
+          <button id="toggleCamera" class="control-btn" type="button" aria-label="Kamera" title="Kamera"></button>
+          <button id="toggleMic" class="control-btn" type="button" aria-label="Mikrofon" title="Mikrofon"></button>
+          <button
+            id="copyInviteBtn"
+            type="button"
+            title="Oda kodunu kopyala"
+            aria-label="Oda kodunu kopyala"
+          >
+            <svg viewBox="0 0 24 24"
+                width="23" height="23"
+                fill="none" stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+          </button>
+          <button id="leaveMeetingBtn" type="button" aria-label="Toplantıdan ayrıl" title="Toplantıdan ayrıl"></button>
+        </div>
+
+        <p class="stage-footnote">Connecta ile bağlantıda kal ✦</p>
+      </section>
+
+    </div>
+
+  </div>
+
+  <script>
+    // DOM elemanları
+    const loginDiv = document.getElementById('login');
+    const mainDiv = document.getElementById('main');
+    const nameInput = document.getElementById('nameInput');
+    const roomInput = document.getElementById('roomInput');
+    const joinBtn = document.getElementById('joinBtn');
+    const localVideo = document.getElementById('localVideo');
+    const remoteVideo = document.getElementById('remoteVideo');
+    const toggleCameraBtn = document.getElementById('toggleCamera');
+    const toggleMicBtn = document.getElementById('toggleMic');
+    // Kontrol butonları yalnızca ikon gösterir.
+    const controlIcons = {
+      camera: '<rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
+      cameraOff: '<path d="m2 2 20 20"/><path d="M9.5 5H14a2 2 0 0 1 2 2v3l5-3v10l-2.3-1.4"/><path d="M16 16v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7c0-.5.2-1 .5-1.4"/>',
+      mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5m-4 0h8"/>',
+      micOff: '<path d="m2 2 20 20"/><path d="M9 9v2a3 3 0 0 0 5.1 2.1M15 9V5a3 3 0 0 0-5.8-1.1"/><path d="M5 10a7 7 0 0 0 12 4.9M19 10a7 7 0 0 1-.3 2M12 17v5m-4 0h8"/>',
+      leave: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3.1 5.2 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.7l.5 2.8a2 2 0 0 1-.6 1.7L8.1 11a16 16 0 0 0 4.9 4.9l1.8-1.9a2 2 0 0 1 1.7-.6l2.8.5a2 2 0 0 1 1.7 2Z"/><path d="m16 3 5 5m0-5-5 5"/>'
+    };
+    function setControlIcon(button, iconName, label) {
+      button.innerHTML = `<svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${controlIcons[iconName]}</svg>`;
+      button.title = label;
+      button.setAttribute('aria-label', label);
+    }
+
+    function updateCameraButton(track) {
+      const available = !!track && track.readyState === 'live';
+      toggleCameraBtn.disabled = !available;
+      setControlIcon(toggleCameraBtn,
+        available && track.enabled ? 'camera' : 'cameraOff',
+        !available ? 'Kamera bulunamadı' : track.enabled ? 'Kamerayı kapat' : 'Kamerayı aç');
+    }
+
+    function updateMicButton(track) {
+      const available = !!track && track.readyState === 'live';
+      toggleMicBtn.disabled = !available;
+      setControlIcon(toggleMicBtn,
+        available && track.enabled ? 'mic' : 'micOff',
+        !available ? 'Mikrofon bulunamadı' : track.enabled ? 'Mikrofonu kapat' : 'Mikrofonu aç');
+    }
+
+    const leaveMeetingBtn = document.getElementById('leaveMeetingBtn');
+    setControlIcon(leaveMeetingBtn, 'leave', 'Toplantıdan ayrıl');
+    updateCameraButton(null);
+    updateMicButton(null);
+    let intentionalDisconnect = false;
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const messagesDiv = document.getElementById('messages');
+    let localStream;
+    let peerConnection;
+    let ws;
+    let name, room;
+    let role; // caller veya callee
+    let isOfferSent = false; // Teklifin gönderilip gönderilmediğini takip eder
+    const localAvatar = document.getElementById('localAvatar');
+    const remoteAvatar = document.getElementById('remoteAvatar');
+    const remoteParticipantName = document.getElementById('remoteParticipantName');
+    function setLocalParticipant(displayName) {
+      localAvatar.textContent = (displayName || '?').trim().charAt(0).toLocaleUpperCase('tr-TR');
+    }
+
+    function setRemoteParticipant(displayName) {
+      if (!displayName || !displayName.trim()) return;
+      remoteAvatar.textContent = displayName.trim().charAt(0).toLocaleUpperCase('tr-TR');
+      remoteParticipantName.textContent = displayName.trim();
+    }
+
+    function resetRemoteParticipant() {
+      remoteAvatar.textContent = '◌';
+      remoteParticipantName.textContent = 'Katılımcı bekleniyor';
+      remoteVideo.classList.remove('has-video');
+    }
+
+    function updateVideoVisibility(videoElement, stream) {
+      const track = stream?.getVideoTracks()[0];
+      videoElement.classList.toggle('has-video', !!(track && track.readyState === 'live' && track.enabled));
+    }
+
+    const configuration = {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" }
+      ]
+    };
+let lastMessageSender = null;
+    function addMessage(sender, message, self = false) {
+      if (sender === 'Sistem') {
+        console.info('[Connecta]', message);
+        return;
+      }
+
+      const currentSender = self ? 'Sen' : sender;
+      const msgDiv = document.createElement('div');
+      msgDiv.className = self ? 'msg self' : 'msg';
+      // Gönderen değiştiğinde ismini göster.
+      if (lastMessageSender !== currentSender) {
+        const header = document.createElement('div');
+        header.className = 'msg-header';
+        const senderName = document.createElement('span');
+        senderName.className = 'msg-sender';
+        senderName.textContent = currentSender;
+        header.appendChild(senderName);
+        msgDiv.appendChild(header);
+      } else {
+        msgDiv.classList.add('msg-consecutive');
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      bubble.textContent = message;
+      msgDiv.appendChild(bubble);
+      messagesDiv.appendChild(msgDiv);
+      lastMessageSender = currentSender;
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function addParticipantNotice(participantName, action) {
+      const notice = document.createElement('div');
+      notice.className = 'participant-notice';
+      const text = document.createElement('span');
+      text.textContent = action === 'joined'
+        ? `${participantName} toplantıya katıldı`
+        : `${participantName} toplantıdan ayrıldı`;
+      const time = document.createElement('small');
+      time.textContent = new Date().toLocaleTimeString('tr-TR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      notice.appendChild(text);
+      notice.appendChild(time);
+      messagesDiv.appendChild(notice);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function setupWebSocket() {
+      
+      const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      ws = new WebSocket(`${wsProtocol}//${window.location.host}`);
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ type: 'join', room, name }));
+        console.log('WebSocket bağlantısı açıldı');
+      };
+      ws.onmessage = async (event) => {
+        const data = JSON.parse(event.data);
+        console.log('WebSocket mesajı alındı:', data);
+        switch(data.type) {
+          case 'room-full':
+          case 'error':
+            addMessage('Sistem', data.message);
+            alert(data.message);
+            if (localStream) {
+              localStream.getTracks().forEach(track => track.stop());
+              localStream = null;
+              localVideo.srcObject = null;
+            }
+            loginDiv.classList.add('active');
+            mainDiv.classList.remove('active');
+            joinBtn.disabled = false;
+            joinBtn.textContent = 'Toplantıya katıl →';
+            if (ws) {
+              ws.close();
+            }
+            break;
+                    case 'role': {
+  const previousRole = role;
+  role = data.role;
+  if (previousRole === 'callee' && role === 'caller') {
+    isOfferSent = false;
+    addMessage(
+      'Sistem',
+      'Artık oda yöneticisisiniz. Yeni katılımcı bekleniyor...'
+    );
+  }
+  loginDiv.classList.remove('active');
+  mainDiv.classList.add('active');
+  console.log('Rol atandı:', role);
+  if (!peerConnection) {
+    createPeerConnection();
+  }
+  if (role === 'caller') {
+    addMessage('Sistem', 'Oda oluşturuldu. Diğer katılımcı bekleniyor...');
+  } else if (role === 'callee') {
+    addMessage('Sistem', 'Odaya katıldınız. Bağlantı bekleniyor...');
+  }
+  break;
+}
+case 'peer-ready':
+            setRemoteParticipant(data.peerName);
+            if (role === 'caller' && peerConnection && !isOfferSent) {
+              addMessage('Sistem', `${data.peerName} katıldı. Bağlantı kuruluyor...`);
+              console.log('Eş hazır, teklif oluşturuluyor ve gönderiliyor.');
+              try {
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                ws.send(JSON.stringify({ type: 'offer', offer }));
+                isOfferSent = true;
+              } catch (e) {
+                console.error('Teklif oluşturma/gönderme hatası (peer-ready):', e);
+                addMessage('Sistem', 'Teklif oluşturulamadı.');
+              }
+            }
+            break;
+          case 'offer': 
+            if (role === 'callee') {
+              if (!peerConnection) { 
+                console.log('Teklif alındı (callee), peer connection oluşturuluyor.');
+                createPeerConnection();
+              }
+              console.log('Teklif alindi, işleniyor...');
+              addMessage('Sistem', 'Gelen arama teklifi alınıyor...');
+              try {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                ws.send(JSON.stringify({ type: 'answer', answer }));
+                addMessage('Sistem', 'Arama teklifi yanıtlandı.');
+              } catch (e) {
+                  console.error("Offer işleme hatası:", e);
+                  addMessage('Sistem', 'Teklif işlenirken hata oluştu.');
+              }
+            }
+            break;
+          case 'answer': 
+            if (role === 'caller') {
+              console.log('Yanıt alındı, işleniyor...');
+              addMessage('Sistem', 'Arama yanıtı alındı.');
+              try {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+              } catch(e) {
+                console.error("Answer işleme hatası:", e);
+                addMessage('Sistem', 'Yanıt işlenirken hata oluştu.');
+              }
+            }
+            break;
+          case 'ice-candidate':
+            if (peerConnection) {
+              try {
+                console.log('ICE adayı alindi:', data.candidate);
+                await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+              } catch(e) {
+                console.error('ICE Adayı Ekleme Hatası:', e);
+              }
+            }
+            break;
+          case 'chat-message':
+            if (data.name && data.name !== name) setRemoteParticipant(data.name);
+            addMessage(data.name, data.message, false);
+            break;
+          case 'user-joined':
+            setRemoteParticipant(data.name);
+            addParticipantNotice(data.name, 'joined');
+            break;
+          case 'user-left':
+            resetRemoteParticipant();
+            addParticipantNotice(data.name, 'left');
+            if (remoteVideo.srcObject) {
+                remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+                remoteVideo.srcObject = null;
+            }
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null; // PeerConnection nesnesini null yaparak yeniden oluşturulmasını sağla
+            }
+            addMessage('Sistem', 'Karşı taraf ayrıldı. Yeni bir bağlantı için odaya tekrar katılın.');
+            if (role === 'caller') isOfferSent = false; // Arayan taraf yeni bir teklif gönderebilsin
+            // Eğer tek başınıza kaldıysanız ve arayansanız, yeni birini bekleyebilirsiniz.
+            if (role === 'caller') {
+                addMessage('Sistem', 'Diğer katılımcı bekleniyor...');
+            }
+
+            // Gerekirse login ekranına döndürme veya durumu kullanıcıya bildirme
+            // loginDiv.classList.add('active');
+            // mainDiv.classList.remove('active');
+            break;
+        }
+      };
+      ws.onerror = (e) => {
+        console.error('WebSocket Hatası:', e);
+        addMessage('Sistem', 'WebSocket bağlantı hatası!');
+        alert('Sunucu bağlantısında hata oluştu!');
+      };
+      ws.onclose = () => {
+        console.log('WebSocket bağlantısı kapandı');
+        // Eski WebRTC bağlantısını kapat
+        if (peerConnection) {
+          peerConnection.close();
+          peerConnection = null;
+        }
+
+        // Kamera ve mikrofonu serbest bırak
+        if (localStream) {
+          localStream.getTracks().forEach(track => track.stop());
+          localStream = null;
+        }
+        localVideo.srcObject = null;
+        remoteVideo.srcObject = null;
+        // Bağlantı durumunu sıfırla
+        role = null;
+        isOfferSent = false;
+        // Kullanıcıyı giriş ekranına döndür
+        mainDiv.classList.remove('active');
+        loginDiv.classList.add('active');
+        // Giriş butonunu yeniden etkinleştir
+        joinBtn.disabled = false;
+        joinBtn.textContent = 'Toplantıya katıl →';
+        if (!intentionalDisconnect) {
+          alert('Sunucu bağlantısı kesildi. Lütfen tekrar bağlanın.');
+        }
+        intentionalDisconnect = false;
+      };
+    }
+
+    function createPeerConnection() {
+      if (peerConnection) {
+        console.log("Mevcut PeerConnection kapatılıyor ve yenisi oluşturuluyor.");
+        peerConnection.onicecandidate = null;
+        peerConnection.ontrack = null;
+        peerConnection.onconnectionstatechange = null;
+        peerConnection.close();
+        peerConnection = null;
+      }
+      peerConnection = new RTCPeerConnection(configuration);
+      isOfferSent = false; 
+      console.log("PeerConnection oluşturuldu.");
+      if (localStream) {
+        localStream.getTracks().forEach(track => {
+            console.log("Yerel akışa parça ekleniyor:", track.kind);
+            peerConnection.addTrack(track, localStream)
+        });
+      } else {
+        console.warn("PeerConnection oluşturulurken yerel akış (localStream) mevcut değil.");
+        addMessage('Sistem', 'Kamera/Mikrofon akışı olmadan bağlantı kuruluyor.');
+      }
+      peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+          console.log('Yeni ICE adayı gönderiliyor:', event.candidate);
+          ws.send(JSON.stringify({ type: 'ice-candidate', candidate: event.candidate }));
+        }
+      };
+      peerConnection.ontrack = (event) => {
+        event.track.addEventListener('ended', () => updateVideoVisibility(remoteVideo, remoteVideo.srcObject));
+        console.log('Uzak akış (track) alındı:', event.streams[0]);
+        addMessage('Sistem', 'Uzak video akışı alınıyor...');
+        if (event.streams && event.streams[0]) {
+            remoteVideo.srcObject = event.streams[0];
+            updateVideoVisibility(remoteVideo, event.streams[0]);
+        } else {
+            if (!remoteVideo.srcObject && event.track) {
+              const inboundStream = new MediaStream();
+              inboundStream.addTrack(event.track);
+              remoteVideo.srcObject = inboundStream;
+              updateVideoVisibility(remoteVideo, inboundStream);
+            }
+        }
+      };
+      peerConnection.onconnectionstatechange = event => {
+        if (peerConnection) {
+            console.log("Peer Bağlantı Durumu:", peerConnection.connectionState);
+            addMessage('Sistem', `Bağlantı durumu: ${peerConnection.connectionState}`);
+            if (peerConnection.connectionState === 'connected') {
+                addMessage('Sistem', 'Bağlantı başarıyla kuruldu!');
+            }
+            if (peerConnection.connectionState === 'failed') {
+                addMessage('Sistem', 'Bağlantı başarısız oldu. Lütfen tekrar deneyin.');
+            }
+             if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'closed') {
+                addMessage('Sistem', 'Bağlantı kesildi.');
+                if (remoteVideo.srcObject) {
+                    remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+                    remoteVideo.srcObject = null;
+                }
+            }
+        }
+      };
+    }
+
+    async function startMedia() {
+  try {
+    // Önce kamera ve mikrofonu birlikte dene
+    try {
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 1280, height: 720, frameRate: 30 },
+        audio: true
+      });
+      addMessage('Sistem', 'Kamera ve mikrofon başlatıldı.');
+    } catch (err) {
+      // Kamera bulunamazsa sadece mikrofonu dene
+      if (err.name === 'NotFoundError' ||
+          err.name === 'OverconstrainedError') {
+        console.warn('Kamera bulunamadı, mikrofon deneniyor.');
+        localStream = await navigator.mediaDevices.getUserMedia({
+          video: false,
+          audio: true
+        });
+        addMessage('Sistem', 'Kamera bulunamadı. Mikrofonla devam ediliyor.');
+      } else {
+        throw err;
+      }
+    }
+    localVideo.srcObject = localStream;
+    const videoTrack = localStream.getVideoTracks()[0];
+const audioTrack = localStream.getAudioTracks()[0];
+updateCameraButton(videoTrack);
+    updateMicButton(audioTrack);
+  } catch (err) {
+    console.error('startMedia hatası:', err);
+    addMessage('Sistem', 'Medya erişimi başarısız oldu.');
+    throw err;
+  }
+}
+    toggleCameraBtn.onclick = () => {
+      if(!localStream) return;
+      const videoTrack = localStream.getVideoTracks()[0];
+      if(!videoTrack) return;
+      videoTrack.enabled = !videoTrack.enabled;
+      updateVideoVisibility(localVideo, localStream);
+      updateCameraButton(videoTrack);
+      addMessage('Sistem', `Kamera ${videoTrack.enabled ? 'açıldı' : 'kapatıldı'}.`);
+    };
+    toggleMicBtn.onclick = () => {
+      if(!localStream) return;
+      const audioTrack = localStream.getAudioTracks()[0];
+      if(!audioTrack) return;
+      audioTrack.enabled = !audioTrack.enabled;
+      updateMicButton(audioTrack);
+      addMessage('Sistem', `Mikrofon ${audioTrack.enabled ? 'açıldı' : 'kapatıldı'}.`);
+    };
+    leaveMeetingBtn.onclick = () => {
+      // Sunucuya ayrıldığımızı WebSocket'i kapatarak bildiriyoruz.
+      intentionalDisconnect = true;
+      if (ws && ws.readyState !== WebSocket.CLOSED) {
+        ws.close();
+      } else {
+        if (peerConnection) { peerConnection.close(); peerConnection = null; }
+        if (localStream) { localStream.getTracks().forEach(track => track.stop()); localStream = null; }
+        localVideo.srcObject = null;
+        remoteVideo.srcObject = null;
+        resetRemoteParticipant();
+        updateCameraButton(null);
+        updateMicButton(null);
+        role = null;
+        isOfferSent = false;
+        mainDiv.classList.remove('active');
+        loginDiv.classList.add('active');
+        joinBtn.disabled = false;
+        joinBtn.textContent = 'Toplantıya katıl →';
+        intentionalDisconnect = false;
+      }
+      messagesDiv.replaceChildren();
+      lastMessageSender = null;
+      chatInput.value = '';
+    };
+    joinBtn.onclick = async () => {
+      name = nameInput.value.trim();
+      setLocalParticipant(name);
+      room = roomInput.value.trim();
+      if(!name || !room) {
+        alert('Lütfen ad soyad ve oda numarasını girin!');
+        return;
+      }
+      joinBtn.disabled = true;
+      joinBtn.textContent = "Bağlanılıyor...";
+      try {
+        await startMedia();
+        updateVideoVisibility(localVideo, localStream); 
+        //loginDiv.classList.remove('active');
+        //mainDiv.classList.add('active');
+        addMessage('Sistem', `${name} olarak ${room} odasına katılıyorsunuz...`);
+        // Eğer daha önce bir WebSocket bağlantısı varsa kapat
+        if (ws && ws.readyState !== WebSocket.CLOSED) {
+            ws.close();
+        }
+
+        // Eğer daha önce bir PeerConnection varsa kapat
+        if (peerConnection) {
+            peerConnection.close();
+            peerConnection = null;
+        }
+        setupWebSocket(); 
+      } catch (error) {
+        console.error("Odaya katılım sırasında medya hatası:", error);
+        addMessage('Sistem', 'Medya başlatılamadığı için odaya katılım başarısız.');
+        joinBtn.disabled = false; 
+        joinBtn.textContent = "Toplantıya katıl →";
+      }
+    };
+    // Yeni toplantı: aynı katılım akışını kullanır, sadece kodu otomatik üretir.
+    const createMeetingBtn = document.getElementById('createMeetingBtn');
+    createMeetingBtn.addEventListener('click', () => {
+      if (joinBtn.disabled) return;
+      if (!nameInput.value.trim()) {
+        nameInput.focus();
+        nameInput.setCustomValidity('Önce adını yazmalısın.');
+        nameInput.reportValidity();
+        return;
+      }
+      nameInput.setCustomValidity('');
+      const bytes = new Uint8Array(6);
+      crypto.getRandomValues(bytes);
+      const generatedCode = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+      roomInput.value = generatedCode;
+      joinBtn.click();
+    });
+    nameInput.addEventListener('input', () => nameInput.setCustomValidity(''));
+    chatForm.onsubmit = (e) => {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if(!msg || !ws || ws.readyState !== WebSocket.OPEN) {
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            addMessage('Sistem', 'Mesaj gönderilemedi. Sunucu bağlantısı yok.');
+        }
+        return;
+      }
+      addMessage(name, msg, true);
+      ws.send(JSON.stringify({ type: 'chat-message', message: msg, name }));
+      chatInput.value = '';
+    };
+      const copyInviteBtn = document.getElementById('copyInviteBtn');
+      copyInviteBtn.addEventListener('click', async () => {
+        const roomCode = document.getElementById('roomInput').value.trim();
+        if (!roomCode) {
+          alert('Önce bir toplantıya katılmalısın.');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(roomCode);
+          alert('Oda kodu kopyalandı: ' + roomCode);
+        } catch (error) {
+          console.error('Oda kodu kopyalanamadı:', error);
+          window.prompt('Oda kodunu buradan kopyala:', roomCode);
+        }
+      });
+    const inviteParams = new URLSearchParams(window.location.search);
+    const invitedRoom = inviteParams.get('room');
+    if (invitedRoom && invitedRoom.trim().length <= 50) {
+      document.getElementById('roomInput').value = invitedRoom.trim();
+    }
+
+  </script>
+
+</body>
+</html>
