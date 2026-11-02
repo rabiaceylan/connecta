@@ -931,9 +931,12 @@ updateCameraButton(videoTrack);
     leaveMeetingBtn.onclick = () => {
       // Sunucuya ayrıldığımızı WebSocket'i kapatarak bildiriyoruz.
       intentionalDisconnect = true;
-      if (ws && ws.readyState !== WebSocket.CLOSED) {
-        ws.close();
-      } else {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'leave' }));
+          ws.close();
+        } else if (ws && ws.readyState === WebSocket.CONNECTING) {
+          ws.close();
+        } else {
         if (peerConnection) { peerConnection.close(); peerConnection = null; }
         if (localStream) { localStream.getTracks().forEach(track => track.stop()); localStream = null; }
         localVideo.srcObject = null;

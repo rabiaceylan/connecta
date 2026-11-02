@@ -28,6 +28,35 @@ server.listen(PORT, () => {
 
 const rooms = Object.create(null);
 
+function leaveRoom(ws) {
+  if (!ws.room || !rooms[ws.room]) return;
+
+  const roomId = ws.room;
+
+  rooms[roomId] = rooms[roomId].filter(
+    client => client !== ws
+  );
+
+  rooms[roomId].forEach(client => {
+    sendMessage(client, {
+      type: 'user-left',
+      name: ws.name
+    });
+  });
+
+  if (rooms[roomId].length === 0) {
+    delete rooms[roomId];
+  } else if (rooms[roomId].length === 1) {
+    sendMessage(rooms[roomId][0], {
+      type: 'role',
+      role: 'caller'
+    });
+  }
+
+  ws.room = null;
+  ws.name = null;
+}
+
 console.log(`WebSocket sunucusu ${PORT} portunda çalışıyor...`);
 
 // WebSocket bağlantısına güvenli biçimde mesaj gönderir.
@@ -189,6 +218,11 @@ wss.on('connection', ws => {
         break;
       }
 
+      case 'leave': {
+      leaveRoom(ws);
+      break;
+    }
+
       case 'chat-message': {
         if (!ws.room || !rooms[ws.room]) {
           sendMessage(ws, {
@@ -229,53 +263,12 @@ wss.on('connection', ws => {
   });
 
   ws.on('close', () => {
-    console.log(
-      `${ws.name || ws.id} istemcisinin bağlantısı kesildi.`
-    );
+  console.log(
+    `${ws.name || ws.id} istemcisinin bağlantısı kesildi.`
+  );
 
-    if (!ws.room || !rooms[ws.room]) return;
-
-    const roomId = ws.room;
-
-    // Ayrılan kullanıcıyı odadan çıkar.
-    rooms[roomId] = rooms[roomId].filter(
-      client => client !== ws
-    );
-
-    console.log(`${ws.name} ${roomId} odasından ayrıldı.`);
-
-    // Önce kalan kullanıcıya eski bağlantıyı temizlemesini söyle.
-    rooms[roomId].forEach(client => {
-      sendMessage(client, {
-        type: 'user-left',
-        name: ws.name
-      });
-    });
-
-    // Oda boşaldıysa sil.
-    if (rooms[roomId].length === 0) {
-      delete rooms[roomId];
-      console.log(`${roomId} odası boşaldı ve silindi.`);
-      return;
-    }
-
-    // Odada tek kişi kaldıysa onu yeni caller yap.
-    if (rooms[roomId].length === 1) {
-      const remainingClient = rooms[roomId][0];
-
-      sendMessage(remainingClient, {
-        type: 'role',
-        role: 'caller'
-      });
-
-      console.log(
-        `${remainingClient.name} artık ${roomId} odasının caller kullanıcısı.`
-      );
-    }
-
-    ws.room = null;
-    ws.name = null;
-  });
+  leaveRoom(ws);
+});
 
   ws.on('error', error => {
     console.error(
