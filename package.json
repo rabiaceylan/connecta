@@ -1,17 +1,28 @@
+
 {
-  "name": "webrtc-uygulamasi",
+  "name": "connecta",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "A real-time, two-person video calling and chat application powered by WebRTC and WebSocket.",
+  "private": true,
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "check": "node --check server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "webrtc",
+    "websocket",
+    "video-call",
+    "real-time-chat",
+    "nodejs",
+    "express"
+  ],
   "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "express": "^5.1.0",
     "ws": "^8.18.2"
-  },
-  "description": ""
+  }
 }
