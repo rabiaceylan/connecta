@@ -566,9 +566,17 @@ button,input{font:inherit}button{cursor:pointer}
     }
 
     function updateVideoVisibility(videoElement, stream) {
-      const track = stream?.getVideoTracks()[0];
-      videoElement.classList.toggle('has-video', !!(track && track.readyState === 'live' && track.enabled));
-    }
+    const videoTrack = stream?.getVideoTracks()[0];
+
+    const hasVideo = !!(
+      videoTrack &&
+      videoTrack.readyState === 'live' &&
+      videoTrack.enabled &&
+      !videoTrack.muted
+    );
+
+    videoElement.classList.toggle('has-video', hasVideo);
+  }
 
     const configuration = {
       iceServers: [
@@ -818,8 +826,16 @@ case 'peer-ready':
       console.log("PeerConnection oluşturuldu.");
       if (localStream) {
         localStream.getTracks().forEach(track => {
-            console.log("Yerel akışa parça ekleniyor:", track.kind);
-            peerConnection.addTrack(track, localStream)
+          console.log(
+          "[Connecta] Gönderilen medya:",
+          track.kind,
+          "Durum:",
+          track.readyState,
+          "Aktif:",
+          track.enabled
+        );
+
+      peerConnection.addTrack(track, localStream);
         });
       } else {
         console.warn("PeerConnection oluşturulurken yerel akış (localStream) mevcut değil.");
@@ -832,20 +848,39 @@ case 'peer-ready':
         }
       };
       peerConnection.ontrack = (event) => {
-        event.track.addEventListener('ended', () => updateVideoVisibility(remoteVideo, remoteVideo.srcObject));
-        console.log('Uzak akış (track) alındı:', event.streams[0]);
-        addMessage('Sistem', 'Uzak video akışı alınıyor...');
-        if (event.streams && event.streams[0]) {
-            remoteVideo.srcObject = event.streams[0];
-            updateVideoVisibility(remoteVideo, event.streams[0]);
-        } else {
-            if (!remoteVideo.srcObject && event.track) {
-              const inboundStream = new MediaStream();
-              inboundStream.addTrack(event.track);
-              remoteVideo.srcObject = inboundStream;
-              updateVideoVisibility(remoteVideo, inboundStream);
+            console.log('Uzak akış (track) alındı:', event.track.kind);
+
+            let remoteStream = remoteVideo.srcObject;
+
+            if (!remoteStream) {
+              remoteStream = event.streams?.[0] || new MediaStream();
+              remoteVideo.srcObject = remoteStream;
             }
-        }
+
+            if (!remoteStream.getTracks().includes(event.track)) {
+              remoteStream.addTrack(event.track);
+            }
+
+            const refreshVideo = () => {
+              updateVideoVisibility(remoteVideo, remoteStream);
+            };
+
+            if (event.track.kind === 'video') {
+              event.track.addEventListener('unmute', refreshVideo);
+              event.track.addEventListener('mute', refreshVideo);
+              event.track.addEventListener('ended', refreshVideo);
+            }
+
+            remoteVideo.addEventListener('loadedmetadata', refreshVideo, {
+              once: true
+            });
+
+            refreshVideo();
+
+            remoteVideo.play().catch((error) => {
+              console.warn('Uzak video otomatik oynatılamadı:', error);
+            });
+          };
       };
       peerConnection.onconnectionstatechange = event => {
         if (peerConnection) {
@@ -866,7 +901,6 @@ case 'peer-ready':
             }
         }
       };
-    }
 
     async function startMedia() {
   try {
@@ -892,6 +926,11 @@ case 'peer-ready':
       }
     }
     localVideo.srcObject = localStream;
+    updateVideoVisibility(localVideo, localStream);
+
+    localVideo.play().catch((error) => {
+      console.warn('Yerel video oynatılamadı:', error);
+    });
     const videoTrack = localStream.getVideoTracks()[0];
 const audioTrack = localStream.getAudioTracks()[0];
 updateCameraButton(videoTrack);
